@@ -1,0 +1,95 @@
+# Fruit Counting & Harvest Estimator - central configuration.
+# Every value below is validated at startup (src/config.py). Unknown keys are rejected.
+
+model:
+  path: models/best.pt          # fruit-specific Ultralytics detection checkpoint (see README: training)
+  device: auto                  # auto | cpu | cuda | cuda:0 | mps  (falls back to CPU with a logged reason)
+  imgsz: 960                    # inference size; raise for small/distant fruit (slower)
+  conf: 0.25                    # detector confidence threshold
+  iou: 0.5                      # NMS IoU threshold
+  max_det: 300
+  demo_mode: false              # true => allow a generic COCO checkpoint (labelled DEMO everywhere)
+  demo_class_names: [apple, orange]   # COCO classes usable in demo mode
+  tiling_enabled: false         # tiled inference for dense/small fruit (images only)
+  tile_size: 640
+  tile_overlap: 0.25
+  tiling_include_full_image: true
+
+tracking:
+  backend: ultralytics          # ultralytics (ByteTrack/BoT-SORT) | iou (built-in, fixed camera)
+  tracker_type: bytetrack       # bytetrack | botsort
+  tracker_config_path: null     # e.g. trackers/bytetrack_fruit.yaml ; null => Ultralytics built-in
+  camera_mode: fixed            # fixed | moving  (moving => best-effort counts, see README)
+  min_confirm_observations: 3   # a track must be seen in >= N processed frames to be counted
+  iou_match_threshold: 0.3      # built-in iou backend
+  max_lost_frames: 15           # built-in iou backend (processed frames)
+  max_maturity_observations_per_track: 5
+
+counting:
+  min_confidence: 0.25
+  duplicate_iou_threshold: 0.85  # image mode: suppress near-identical same-class boxes only
+  count_only_in_zones: false
+  zones: []                      # e.g. - {name: row_1, box: [0.0, 0.0, 0.5, 1.0]}  (normalised coords)
+  low_confidence_flag: 0.40
+
+video:
+  input_path: input_orchard.mp4
+  output_path: output_annotated.mp4
+  frame_stride: 1               # >1 skips frames; may break tracking. Skipped != "no fruit".
+  fallback_fps: 30.0            # used (and reported) when FPS metadata is missing/invalid
+  codec: mp4v
+  max_consecutive_errors: 10
+  max_frames: null
+  store_detections: false       # true => per-frame detections CSV (memory-heavy for long videos)
+  transcode_h264: false         # needs ffmpeg; makes output playable in browsers
+  progress_every_n_frames: 25
+
+output:
+  report_dir: outputs/reports
+  annotated_dir: outputs/annotated
+
+fruit:
+  species: [apple]
+  average_weight_grams: {}      # e.g. {apple: 180}  <- must be measured; leave empty if unknown
+
+harvest:
+  harvestable_probability: null           # e.g. 0.85 -- must come from field calibration
+  harvestable_probability_by_species: {}
+  visibility_fraction: null               # in (0, 1]; null => no whole-tree extrapolation
+  validation_pairs_path: null             # CSV: predicted_weight_kg, actual_weight_kg
+  uncertainty_basis: visible              # visible | tree
+  interval_coverage: 0.90
+  min_validation_samples: 10
+
+maturity:
+  enabled: false
+  model_path: models/maturity.pt          # Ultralytics classification checkpoint
+  maturity_labels: [ripe, unripe]
+  condition_labels: [damaged]
+  confidence_threshold: 0.60
+  crop_padding: 0.10
+  min_crop_px: 16
+
+annotation:
+  colors:                                  # RGB
+    ripe: [220, 40, 40]
+    unripe: [60, 180, 75]
+    damaged: [150, 90, 30]
+    uncertain: [240, 180, 0]
+    unavailable: [60, 120, 230]
+    default: [60, 120, 230]
+  min_label_box_px: 28
+  show_track_ids: true
+  font_scale: 0.5
+  box_thickness: 2
+
+dashboard:
+  max_upload_mb: 200
+  image_extensions: [.jpg, .jpeg, .png, .bmp, .webp]
+  video_extensions: [.mp4, .avi, .mov, .mkv]
+  max_table_rows: 2000
+  max_video_frames: 20000
+  admin_password_env: FRUIT_ADMIN_PASSWORD
+
+logging:
+  level: INFO
