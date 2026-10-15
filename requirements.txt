@@ -1,0 +1,11 @@
+# Install PyTorch FIRST for your hardware: https://pytorch.org/get-started/locally/
+# (e.g. CPU-only: pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu)
+torch>=2.2
+ultralytics>=8.3,<9
+opencv-python>=4.8          # use opencv-python-headless on servers without a display
+numpy>=1.26
+pandas>=2.0
+PyYAML>=6.0
+plotly>=5.18
+streamlit>=1.50             # app.py uses width="stretch"
+pytest>=8.0
