@@ -1,0 +1,10 @@
+# Example ByteTrack settings for Ultralytics (same keys as the built-in bytetrack.yaml).
+# Enable with  tracking.tracker_config_path: trackers/bytetrack_fruit.yaml
+# Tune on YOUR footage; these values are starting points, not validated for any orchard.
+tracker_type: bytetrack
+track_high_thresh: 0.25
+track_low_thresh: 0.1
+new_track_thresh: 0.25
+track_buffer: 30        # frames a lost track is kept (at your processed frame rate)
+match_thresh: 0.8
+fuse_score: True
