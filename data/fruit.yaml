@@ -1,0 +1,15 @@
+# Ultralytics YOLO detection dataset config.
+# `path` is intentionally omitted: scripts/train_detector.py resolves it to the absolute directory
+# containing this file (relative `path` values are resolved against Ultralytics' datasets_dir, a common gotcha).
+#
+# Layout (one label .txt per image, same stem):
+#   data/images/{train,val,test}/IMG_0001.jpg
+#   data/labels/{train,val,test}/IMG_0001.txt     # "class x_center y_center width height", normalised 0..1
+train: images/train
+val: images/val
+test: images/test
+
+names:            # class ids must match the labels; add species as needed
+  0: apple
+  # 1: orange
+  # 2: pear
