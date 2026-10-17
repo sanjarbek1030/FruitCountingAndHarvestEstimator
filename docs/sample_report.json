@@ -1,0 +1,99 @@
+{
+  "schema_version": "1.0",
+  "analysis_id": "20260101_120000_abc123",
+  "input_filename": "tree.png",
+  "analysis_timestamp_utc": "2026-01-01T12:00:00+00:00",
+  "mode": "image",
+  "demo_mode": false,
+  "model": {
+    "checkpoint_name": "best.pt",
+    "checkpoint_sha256_prefix": "<12 hex chars>",
+    "ultralytics_version": "<version>",
+    "device": "cpu"
+  },
+  "inference_config": {
+    "imgsz": 960,
+    "detector_conf": 0.25,
+    "nms_iou": 0.5,
+    "counting_min_confidence": 0.25,
+    "duplicate_iou_threshold": 0.85,
+    "tiling_enabled": false,
+    "tracking_backend": "ultralytics",
+    "tracker_type": "bytetrack",
+    "camera_mode": "fixed",
+    "min_confirm_observations": 3,
+    "frame_stride": null,
+    "maturity_enabled": false,
+    "maturity_confidence_threshold": 0.6
+  },
+  "video": null,
+  "counts": {
+    "raw_frame_detections": 3,
+    "rejected_detections": 0,
+    "confirmed_tracks": null,
+    "estimated_unique_visible_fruit": 3,
+    "manual_additions": 0,
+    "manual_rejections": 0,
+    "by_species": {
+      "apple": 3
+    },
+    "by_maturity": {
+      "unavailable": 3
+    },
+    "by_condition": {
+      "unavailable": 3
+    },
+    "by_zone": {},
+    "uncertain_classifications": 0,
+    "confidence": {
+      "mean": 0.9,
+      "median": 0.9,
+      "min": 0.9,
+      "max": 0.9
+    },
+    "estimate_basis": "single_image_visible_fruit (one viewpoint; occluded fruit are not counted)",
+    "track_diagnostics": null
+  },
+  "harvest": {
+    "visible_harvestable_count": 2.4000000000000004,
+    "visible_harvestable_count_rounded_for_display": 2,
+    "visible_harvest_weight_kg": 0.43200000000000005,
+    "visibility_fraction": null,
+    "estimated_total_tree_fruit": null,
+    "tree_harvestable_count": null,
+    "tree_harvest_weight_kg": null
+  },
+  "assumptions": {
+    "average_weight_grams": {
+      "apple": 180.0
+    },
+    "harvestable_probability": {
+      "apple": 0.8
+    },
+    "visibility_fraction": null,
+    "note": "Manually configured assumptions; not measured by this system."
+  },
+  "estimation_method": "observed_unique_visible * harvestable_probability * average_weight_grams / 1000",
+  "uncertainty": null,
+  "uncertainty_note": "No uncertainty interval: no field-validation data configured (harvest.validation_pairs_path).",
+  "processing_duration_seconds": 0.0,
+  "warnings": [
+    "Maturity classification unavailable: maturity breakdown is not reported.",
+    "Visibility fraction not configured: total tree yield cannot be reliably inferred. Only observed (visible) quantities are reported."
+  ],
+  "limitations": [
+    "Counts cover only fruit visible from the recorded viewpoint(s); occluded fruit are not counted.",
+    "A track id is not proof of a globally unique fruit: ID switches and merges occur.",
+    "Maturity labels describe visible appearance, not physiological maturity or operational harvest readiness.",
+    "Harvest values depend entirely on the configured calibration assumptions (probability, mean weight, visibility fraction).",
+    "No accuracy figure is implied; validate against manual counts and measured harvest weights."
+  ],
+  "definitions": {
+    "raw_frame_detections": "Every box the detector emitted in every processed frame (images: boxes before filtering). NOT a fruit count for videos.",
+    "confirmed_tracks": "Video only: tracks seen in >= min_confirm_observations processed frames.",
+    "estimated_unique_visible_fruit": "Policy-based estimate of distinct fruit visible in the footage (image: counted detections; video: confirmed tracks after review). Not ground truth.",
+    "estimated_total_tree_fruit": "estimated_unique_visible_fruit / visibility_fraction. Present only when a visibility fraction is configured; the fraction is an assumption.",
+    "visible_harvestable_count": "unique visible fruit * harvestable_probability (unrounded).",
+    "visible_harvest_weight_kg": "visible_harvestable_count * average_weight_grams / 1000."
+  }
+}
